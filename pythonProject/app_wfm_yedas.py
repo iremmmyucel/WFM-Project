@@ -133,7 +133,7 @@ sorted_teams = sorted(shortest_distances.items(), key=lambda x: (x[1][0], x[1][2
 x_distance = 1
 nodes_within_x = nodes_up_to_distance_x(G, ariza_node, x_distance)
 
-# 6. Bu nodeların etrafında kesinti ihbarları oluştur
+# 6. Bu nodeların etrafında kesinti ihbarları oluştur, database bağlantısı
 def get_db_connection():
     conn = mysql.connector.connect(
         host="3.71.18.135",
