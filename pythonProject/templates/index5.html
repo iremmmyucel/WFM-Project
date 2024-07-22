@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Two DataFrames</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container">
+    <div class="row" style="white-space: nowrap;">
+        <div class="col-md-6 p-5" style="white-space: nowrap; overflow-x: auto;">
+            <h2>DataFrame 1</h2>
+            <table class="table table-striped" style="white-space: nowrap;">
+                <thead>
+                    <tr>
+                        <th>Activity ID (M)</th>
+                        <th>Type (M)</th>
+                        <th>Latitude(M)</th>
+                        <th>Longitude(M)</th>
+                        <th>Etkilenen Kullanıcı Sayısı</th>
+                        <th>Cezaya Kalan Süre</th>
+                        <th>SLA Kalan Süre</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in df1.iterrows() %}
+                        <tr>
+                            <td>{{ row['Activity ID (M)'] }}</td>
+                            <td>{{ row['Type (M)'] }}</td>
+                            <td>{{ '%.6f' % row['Latitude(M)'] }}</td>
+                            <td>{{ '%.6f' % row['Longitude(M)'] }}</td>
+                            <td>{{ row['Number Of Users'] }}</td>
+                            <td>{{ row['Time Remaining'] }}</td>
+                            <td>{{ row['Delta Time'] }}</td>
+                            <td>{{ row['Score'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-6 p-5" style="white-space: nowrap; overflow-x: auto;">
+            <h2>DataFrame 1</h2>
+            <table class="table table-striped" style="white-space: nowrap;">
+                <thead>
+                    <tr>
+                        <th>Activity ID (M)</th>
+                        <th>Type (M)</th>
+                        <th>Latitude(M)</th>
+                        <th>Longitude(M)</th>
+                        <th>Etkilenen Kullanıcı Sayısı</th>
+                        <th>Cezaya Kalan Süre</th>
+                        <th>SLA Kalan Süre</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in df1.iterrows() %}
+                        <tr>
+                            <td>{{ row['Activity ID (M)'] }}</td>
+                            <td>{{ row['Type (M)'] }}</td>
+                            <td>{{ '%.6f' % row['Latitude(M)'] }}</td>
+                            <td>{{ '%.6f' % row['Longitude(M)'] }}</td>
+                            <td>{{ row['Number Of Users'] }}</td>
+                            <td>{{ row['Time Remaining'] }}</td>
+                            <td>{{ row['Delta Time'] }}</td>
+                            <td>{{ row['Score'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WFM Network</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-ant-path@1.3.0/dist/leaflet-ant-path.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+    body {
+      padding: 30px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    header {
+      color: #fff;
+      background: linear-gradient(to right, #acc054, #5b729b);
+      padding: 10px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+    }
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #5b729b; 
+      color: #fff;
+      padding-top: 20px;
+      z-index: 1;
+    }
+
+    .sidebar .nav-link {
+      color: #d0d0d0;
+      font-weight: 500;
+      margin-top: 15px;
+    }
+
+    .sidebar .nav-link.active {
+      color: #fff;
+      background-color: #aac2db;
+      border-top: 2px solid #fff; 
+      border-bottom: 2px solid #fff; 
+    }
+    .sidebar .nav-link svg {
+      margin-right: 8px;
+    }
+
+    .sidebar .nav-link:hover {
+      color: #fff;
+    }
+
+    .sidebar .nav-item + .nav-item {
+      margin-top: 15px;
+    }
+
+    .sidebar .nav-item .nav-link {
+      display: flex;
+      align-items: center;
+    }
+
+    .tab-content {
+      margin-left: 270px;
+      padding: 20px;
+    }
+
+    .table-content {
+        display: none;
+    }
+
+    .dropdown-menu {
+        color: #fff;
+        background-color: #aac2db;
+        border-top: 2px solid #fff; 
+        border-bottom: 2px solid #fff; 
+        width: 250px;
+        height: 200px;
+    }
+
+    .container-fluid {
+        display: flex; 
+    }
+
+    
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 250px;
+      background-color: #5b729b;
+      color: #fff;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .footer img {
+      width: 200px; 
+      height: auto; 
+      margin-right: 10px;
+    }
+    .table-wrapper {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 25px;
+    border: 1px solid #cccccc;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Ortalamak için */
+    max-width: 800px; /* Maksimum genişlik ayarı */
+}
+
+    .table {
+        width: 100%; /* Tablo genişliği %100 */
+        margin-top: 20px; /* Üst boşluk */
+        margin-bottom: 20px; /* Alt boşluk */
+    }
+
+    .table td {
+        font-size: 16px;
+    }
+
+    .table-card {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 25px;
+        padding: 20px;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px; /* Maksimum genişlik ayarı */
+        margin: 0 auto; /* Ortalamak için */
+    }
+
+    .table-card h4 {
+        border-radius: 25px;
+        padding: 10px;
+        color: #fff;
+        margin-bottom: 15px; /* Alt boşluk */
+    }
+
+    /* Dashboard Content */
+    #dashboardContent {
+        min-height: 500px; /* Örnek olarak dashboard içeriğinin min. yüksekliği */
+    }
+
+    /* İhbar Tablosu Content */
+    #ihbarTableContent {
+        min-height: 600px; /* Örnek olarak ihbar tablosu içeriğinin min. yüksekliği */
+    }
+
+    /* Ekip Tablosu Content */
+    #ekipTableContent {
+        min-height: 400px; /* Örnek olarak ekip tablosu içeriğinin min. yüksekliği */
+    }
+
+    /* Arıza Tablosu Content */
+    #arizaTableContent {
+        min-height: 700px; /* Örnek olarak arıza tablosu içeriğinin min. yüksekliği */
+    }
+
+    /* İş Emri Tablosu Content */
+    #isEmriTableContent {
+        min-height: 550px; /* Örnek olarak iş emri tablosu içeriğinin min. yüksekliği */
+    }
+
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 0 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: italic;
+        font-size: 28px;  /* Preferred icon size */
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+        }
+    .symbol-name-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .symbol-name-container-house {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .symbol-name-container-house .material-symbols-outlined {
+        margin-right: 3%; /* İstenilen boşluk */
+    }
+    .symbol-name-container .material-symbols-outlined {
+        margin-right: 10%; /* İstenilen boşluk */
+    }
+
+    .symbol-name-container2 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        white-space: nowrap;
+    }
+
+    .symbol-name-container2 .material-symbols-outlined {
+        margin-right: 3%; /* İstenilen boşluk */
+    }
+
+    .typing-animation {
+        overflow: hidden;
+        white-space: nowrap;
+        margin: 0 auto; /* Yazi merkezleniyor */
+        animation: typing 2.5s steps(40, end), blink-caret .75s step-end infinite;
+        
+        
+    }  
+    .card {
+        border: none;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); 
+    }
+
+
+    .card-body {
+        padding: 30px;
+    }
+
+
+    #harita_yazisi {
+        font-size: 1.5rem;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    }
+
+
+
+    /* Yazma animasyonunu tanımlayın */
+    @keyframes typing {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+
+    /* Yazı işareti animasyonunu tanımlayın */
+    @keyframes blink-caret {
+        from,
+        to {
+            border-color: transparent;
+        }
+        50% {
+            border-color: orange;
+        }
+    }
+
+    </style>
+    
+</head>
+
+<body>
+    <div class="sidebar">
+        <ul class="nav nav-pills flex-column">
+            <header>Workforce Management Network</header>
+            <li class="nav-item">
+                <a href="#dashboardContent" data-bs-toggle="tab" onclick="showDashboard('dashboardContent')" class="nav-link active d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-fill me-2" viewBox="0 0 16 16">
+                    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+                    <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
+                </svg>
+                Dashboard
+                </a>
+            </li>
+        </ul>
+        <ul class="nav nav-pills flex-column">
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link active d-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-table me-2" viewBox="0 0 16 16">
+                  <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z"/>
+                </svg>
+                Tables
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="#ihbarTableContent" class="dropdown-item" onclick="showTableContent('ihbarTableContent')" >Incident Report List</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a href="#ekipTableContent" class="dropdown-item"  onclick="showTableContent('ekipTableContent')">Team List</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a href="#arizaTableContent" class="dropdown-item" onclick="showTableContent('arizaTableContent')">Incidents</a></li>
+                <div class="dropdown-divider"></div>
+                <li><a href="#isEmriTableContent" class="dropdown-item" onclick="showTableContent('isEmriTableContent')">Work Order List</a></li>
+                <div class="dropdown-divider"></div>
+              </ul>
+            </li>
+          </ul>
+
+        
+        <footer>
+              <div class="footer">
+                    <img src="static/golive_logo.png" alt="Icon">
+              </div>
+        </footer>
+    </div>
+      
+    <div class="tab-content">
+        <div class="col-9">
+            <div class="tab-pane fade show active" id="dashboardContent">
+                <div class="text-center">
+                    <h4 class="mb-4" style="color:cornflowerblue; font-weight: bold;">Dashboard</h4>
+                </div>
+    
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-text">İhbar Listesi</h5>
+                                
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-text">Ekip Listesi</h5>
+
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-text">Arıza Listesi</h5>
+
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-text">İş Emri Listesi</h5>
+ 
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Last updated 3 mins ago</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="container">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4 class="mt-3 mb-0 text-gradient text-primary font-weight-bolder" id="harita_yazisi">Harita Başlığı</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="map" style="width: 400px; height: 400px; margin-top: 25px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="ihbarTableContent" class="table-content">
+        <div class="container my-5">
+            <div class="table-card incident-report-list shadow">
+                <div class="mx-auto text-center" style="max-width: 800px;">
+                    <h4 class="text-center font-weight-bolder mt-4" style="color: #e9c586; border-radius: 25px;">Incident Report List</h4>
+                    <div class="table-wrapper">
+                        <table class="table table-hover table-bordered align-items-center mb-0 table-rounded" id="ihbarTable" style="background-color: #f9f9f9; color: #333; border-radius: 25px;">
+                            <thead>
+                                <tr class="border-bottom border-secondary">
+                                    <th class="text-uppercase text-secondary text-xs text-center font-weight-bolder">Müşteri</th>
+                                    <th class="text-uppercase text-secondary text-xs text-center font-weight-bolder ps-2">Abone No</th>
+                                    <th class="text-uppercase text-secondary text-xs text-center font-weight-bolder ps-2">Adres</th>
+                                    <th class="text-uppercase text-secondary text-xs text-center font-weight-bolder ps-2">Enlem</th>
+                                    <th class="text-uppercase text-secondary text-xs text-center font-weight-bolder ps-2">Boylam</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- {% for sozluk in shortest_paths %}
+                                <tr>
+                                    <td class='text-center'>Ekip " + (index + 1) + "</td>
+                                    <td class='text-center'>" + loc[1].toFixed(6) + "</td>
+                                    <td class='text-center'>" + loc[0].toFixed(6) + "</td>
+                                </tr>
+                                {% endfor %} -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <div id="ekipTableContent" class="table-content">
+        <div class="container-fluid">
+            <div class="mx-auto" style="max-width:800px"> 
+                <div class="card shadow border-bottom-5" style="border-radius: 25px;">
+                    <div class="card-body">
+                        <h4 class="card-title text-center font-weight-bolder mt-1 pt-2" style="color: rgba(27, 79, 79, 0.5);">Ekip Listesi</h4>
+                        <div class="table-responsive-lg" style="max-height: 600px; overflow-y: auto; min-height: 400px; overflow-x: auto;">
+                            <table class="table align-items-center mb-0" id="ekipTable" style="background-color: rgba(27, 79, 79, 0.5); color: rgba(1, 44, 44, 0.9); border-radius: 25px;">
+                                <thead>
+                                    <tr class="border-bottom border-white">
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Ekip-Kod</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Enlem</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Boylam</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Yeterlilik Sınıfı</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">İsim-Soyisim</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Vardiya Saati</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Gün</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Yetenekler</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Uzaklık</th>
+                                        <th class="text-uppercase text-secondary text-xxs text-center font-weight-bolder opacity-7 ps-2">Tahmini Varış Süresi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Tablo İçeriği -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="arizaTableContent" class="table-content">
+        <div class="row mx-auto py-5" style="max-width: 100%; max-height: 100%;">
+            <div class="mx-auto" style="max-width: 800px;"> 
+                <h4 class="text-center fw-bold mt-4" style="color: rgba(0, 0, 0, .6);" id="isEmrih4">Arızalar</h4>
+                <div style="overflow-y: auto; max-height: 600px; overflow-x: auto; border-radius: 25px; overflow-y: auto;">
+                    <table class="table table-striped shadow2 rounded" id="arizaTable"  style="border-radius: 20px; white-space: nowrap;">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Index</th>
+                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Arıza Tipi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for index, row in df1.iterrows() %}
+                                <tr class="accordion-toggle" data-bs-toggle="collapse" data-bs-target="#details{{ index }}" aria-expanded="false">
+                                    <td class="text-center">{{ index + 1}}</td>
+                                    <td class="text-center">{{ row['Type (M)'] }}</td>
+                                </tr>
+                                <tr id="details{{ index }}" class="accordion-collapse collapse" aria-labelledby="heading{{ index }}" data-bs-parent="#arizaTableContent">
+                                    <td colspan="2">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p><strong>Activity ID (M):</strong> {{ row['Activity ID (M)'] }}</p>
+                                                <p><strong>Latitude(M):</strong> {{ '%.6f' % row['Latitude(M)'] }}</p>
+                                                <p><strong>Longitude(M):</strong> {{ '%.6f' % row['Longitude(M)'] }}</p>
+                                            </div>
+                                            <div class="col">
+                                                <p><strong>Etkilenen Kullanıcı Sayısı:</strong> {{ row['Number Of Users'] }}</p>
+                                                <p><strong>Cezaya Kalan Süre:</strong> {{ row['Time Remaining'] }}</p>
+                                                <p><strong>SLA Kalan Süre:</strong> {{ row['Delta Time'] }}</p>
+                                                <p><strong>Puan:</strong> {{ row['Score'] }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="isEmriTableContent" class="table-content">
+        <div class="mx-auto" style="max-width: 800px;"> 
+            <h4 class="text-center fw-bold mt-4" style="color: rgba(114, 47, 55, .6);" id="isEmrih4">İş Emri Listesi</h4>
+            <div class="table-responsive-md shadow mx-auto" style="border-radius: 25px; overflow-x: auto; overflow-y: auto; max-height: 600px;">
+                <table class="table align-items-center mb-0 table-rounded" id="isEmri" style="background-color:rgba(114, 47, 55, .6); color: rgba(0, 0, 0, 0.8); border-radius: 25px;">
+                    <thead>
+                        <tr class="border-bottom border-white">
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Aktivide ID</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Arıza Tipi</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Enlem</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Boylam</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Ekip</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Yetenekler</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Baslama Tarihi</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Bitis Tarihi</th>
+                            <th class="text-uppercase text-white text-xxs text-center font-weight-bolder opacity-7 ps-2">Bitis Süresi</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% for row in is_emri_list %}
+                        <tr>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>format_list_numbered</span>{{ row[0] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>warning_amber</span>{{ row[1] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>location_on</span>{{ '%.6f' % row[17] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>location_on</span>{{ '%.6f' % row[18] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>engineering</span>{{ row[19] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>settings_accessibility</span>{{ row[9] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>calendar_month</span>{{ row[21] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>calendar_month</span>{{ row[22] }}</div></td>
+                            <td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>calendar_month</span>{{ '%.2f' % row[24] }}</div></td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+                        
+    <script>
+        $(document).ready(function() {
+            $('.accordion-toggle').click(function() {
+                var target = $(this).data('bs-target');
+                
+    
+                $(target).collapse('toggle');
+                
+                $(this).attr('aria-expanded', function(_, attr) {
+                    return attr === 'true' ? 'false' : 'true';
+                });
+            });
+        });
+    </script>
+  
+
+    <script>
+        function showDashboard() {
+            document.getElementById('dashboardContent').style.display = 'block'; 
+            var tables = document.querySelectorAll('.table-content');
+            tables.forEach(function(table) {
+                table.style.display = 'none'; 
+            });
+            document.body.classList.remove('noscroll'); 
+        }
+
+        function showTableContent(tableId) {
+            document.getElementById('dashboardContent').style.display = 'none'; 
+            var tables = document.querySelectorAll('.table-content');
+            tables.forEach(function(table) {
+                if (table.id === tableId) {
+                    table.style.display = 'block'; 
+                } else {
+                    table.style.display = 'none'; 
+                }
+            });
+            document.body.classList.add('noscroll'); 
+        }
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#ekipTable').DataTable();
+            $('#arizaTable').DataTable();
+            $('#isEmri').DataTable();
+            
+        });
+    </script>
+
+
+    <script>
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+
+            dropdownToggle.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+            });
+    </script>
+
+    <script>
+        window.onload = function() {
+            // showAlerts fonksiyonunu 5 saniye sonra çağır
+            setTimeout(showAlerts, 5000);
+            setTimeout(ekipAtama, 30000);
+        };
+
+        var ekipTableBody = document.getElementById("ekipTable").getElementsByTagName('tbody')[0];
+        var shortestPaths2 = {{ shortest_paths | tojson }};
+        var pos2 = {{ pos | tojson }};
+        var sorted_teams = {{ sorted_teams | tojson }};
+        var total_distance_list = {{ total_distance_list | tojson }};
+    
+        for (let i = 0; i < shortestPaths2.length; i++) {
+            let shortest_p = shortestPaths2[i];
+            let loc = pos2[shortest_p[0]];
+            
+            // Konum varsa
+            if (loc) {
+                var newRow = ekipTableBody.insertRow();
+                newRow.id = "ekipRow" + i; // Satıra bir id atayın
+                var cell1 = newRow.insertCell(0);
+                var cell2 = newRow.insertCell(1);
+                var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3);
+                var cell5 = newRow.insertCell(4);
+                var cell6 = newRow.insertCell(5);
+                var cell7 = newRow.insertCell(6);
+                var cell8 = newRow.insertCell(7);
+                var cell9 = newRow.insertCell(8);
+                var cell10 = newRow.insertCell(9);
+
+                
+
+                // Hücrelere verileri ekle
+                cell1.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>engineering</span> "+ sorted_teams[i][0]+ "</div>";
+                cell1.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell2.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>location_on</span> " + loc[1].toFixed(6) + "</div>";
+                cell2.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell3.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>location_on</span> " + loc[0].toFixed(6) + "</div>";
+                cell3.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell4.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>grade</span> " + sorted_teams[i][1][2] + "</div>";
+                cell4.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell5.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined' style='margin-right:auto;'>id_card</span>" + sorted_teams[i][1][4] + " " + sorted_teams[i][1][5] + "</div>";
+                cell5.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell6.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>calendar_month</span> " + sorted_teams[i][1][6] + " - " + sorted_teams[i][1][7] + "</div>";
+                cell6.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell7.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>calendar_month</span> " + sorted_teams[i][1][8] + "</div>";
+                cell7.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell8.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>settings_accessibility</span> " + "YG SISTEMLERINDE MANEVRALARYER ALTI CALISMAAG MANEVRALAR AG ENERJI KONTROLU AG SIGORTA DEGISIMISAYACLAR" + "</div>";
+                cell8.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell9.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>near_me</span> " + (total_distance_list[i].toFixed(0) / 1000) + "</div>";
+                cell9.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+                cell10.innerHTML = "<div class='symbol-name-container2'><span class='material-symbols-outlined'>near_me</span> " + (((total_distance_list[i].toFixed(0) / 1000)  / 50) * 60).toFixed(2) + "</div>";
+                cell10.classList.add("text-center"); // Hücreye text-center sınıfını ekle
+
+
+
+            }
+        }
+        
+        function changeText(text) {
+            var progressElement = $("#progress");
+            progressElement.removeClass('typing-animation'); // Eğer daha önce animasyon varsa kaldır
+            progressElement.text(''); // Metni temizle
+            var i = 0;
+            var typingInterval = setInterval(function() {
+                if (i < text.length) { // Karakterlerin sonuna gelip gelmediğini kontrol et
+                    progressElement.append(text.charAt(i)); // Karakterleri birer birer ekleyerek metni yazdır
+                    i++;
+                } else {
+                    clearInterval(typingInterval); // Animasyonu durdur
+                    // progressElement.addClass('typing-animation'); // Animasyon sınıfını ekle
+                }
+            }, 40); // Her 100 milisaniyede bir karakter ekle
+        }
+        function changeTextColor() {
+            var colors = ['#be9327', '#474444']; // Değişen renkler: kırmızı ve sarı
+            var currentIndex = 0;
+
+            setInterval(function() {
+                $("#ihbarTable td").css("color", colors[currentIndex]); // Tüm td hücrelerinin metin rengini güncelle
+                currentIndex = (currentIndex + 1) % colors.length; // Renk dizisindeki bir sonraki rengi seç
+            }, 1000); // 1 saniyede bir renk değiştir
+        }
+
+        function generateSixDigitRandomNumber() {
+            var min = 10000000; // En küçük 8 haneli sayı
+            var max = 99999999; // En büyük 8 haneli sayı
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        
+        var map = L.map('map').setView([41.19732911223483, 36.719378543270956], 16);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Polylines'ı çiz
+        var plot_polylines = {{ plot_polylines | tojson }};
+        for (var i = 0; i < plot_polylines.length; i++) {
+            var points = plot_polylines[i];
+            L.polyline(points, { color: 'gray', weight: 2 }).addTo(map);
+        }
+
+        // Düğümleri çiz
+        var g_nodes = {{ g_nodes | tojson }};
+        for (var i = 0; i < g_nodes.length; i++) {
+            var node = g_nodes[i];
+            var data = node[1];
+            var node_id = node[0];
+            var isSelected = {{ selected_nodes | tojson}}.includes(node_id);
+
+        var radius = isSelected ? 10 : 4;
+        var color = isSelected ? 'green' : 'blue';
+        var fillOpacity = isSelected ? 0.8 : 0.6;
+
+        L.circleMarker([data.y, data.x], {
+            radius: radius,
+            color: color,
+            fill: true,
+            fillColor: color,
+            fillOpacity: fillOpacity
+        }).addTo(map);
+        }
+
+        // İhbar noktalarını çiz (showAlerts fonksiyonu çağrıldığında)
+        function showAlerts() {
+            var ihbar_points_x = {{ ihbar_points_x | tojson}};
+            var ihbar_points_y = {{ ihbar_points_y | tojson }};
+            var ariza_position = {{ ariza_position | tojson }};
+            console.log("Ariza Position: ", ariza_position);
+            var musteriler = {{ musteriler | tojson }};
+            var addresses_with_streets = {{ addresses_with_streets | tojson }};
+
+
+
+            var currentZoom = map.getZoom();
+            if (currentZoom < map.getMaxZoom()) {
+                map.setView([ariza_position[1], ariza_position[0]], 18); // Zoom seviyesini bir arttırır
+            }
+
+
+            var ihbarNoktaSayisi = ihbar_points_x.length;
+            var animasyonSuresi = 10000; // Animasyon süresi 10 saniye olarak belirlendi
+            var ihbarNoktaGosterimArasi = animasyonSuresi / ihbarNoktaSayisi;
+
+            var ihbarNoktalari = [];
+            for (let i = 0; i < ihbarNoktaSayisi; i++) {
+                ihbarNoktalari.push([ihbar_points_y[i], ihbar_points_x[i]]);
+            }
+
+            // Tüm ihbar noktalarını çizmek için bekleme süresini ayarla
+            var delay = 0;
+            // $("#progress").text("İhbarlar gösteriliyor.."); // h4 başlığına metni ekle
+            
+            // changeText("İhbarlar gösteriliyor..");
+            document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">İhbarlar gösteriliyor..</h4>');
+            for (let i = 0; i < ihbarNoktaSayisi; i++) {
+                var x = ihbar_points_x[i];
+                var y = ihbar_points_y[i];
+
+                // İhbar noktasını belirlenen süre sonunda çiz
+                setTimeout(function (x, y) {
+                    return function () {
+                        L.circleMarker([y, x], {
+                            radius: 3,
+                            color: '#FFA500',
+                            fill: true
+                        }).addTo(map);
+
+                        // İhbarı tabloya ekle
+                        // <span class='material-symbols-rounded'>person</span>
+                        var tableRow = "<tr><td class='text-center'><div class='symbol-name-container'><span class='material-symbols-outlined'>person</span><span class='name'>" + musteriler[i] + "</span></div></td><td class='text-center'><div class='symbol-name-container'><span class='material-symbols-outlined'>format_list_numbered</span>" + generateSixDigitRandomNumber() + "</td><td class='text-center'><div class='symbol-name-container-house'><span class='material-symbols-outlined'>house</span>" + addresses_with_streets[i] + "</td><td class='text-center'><div class='symbol-name-container'><span class='material-symbols-outlined'>location_on</span>" + y.toFixed(6) + "</td><td class='text-center'><div class='symbol-name-container'><span class='material-symbols-outlined'>location_on</span>" + x.toFixed(6) + "</td></tr>";
+                        $("#ihbarTable tbody").prepend(tableRow);
+
+      
+                    }
+                }(x, y), delay);
+                changeTextColor();
+
+                // Her bir ihbar noktasının gösterim aralığı kadar süre ekleyin
+                delay += ihbarNoktaGosterimArasi;
+            }
+
+            // AntPath ile ihbar noktalarını birleştirerek bir poligon çiz
+            var polyline;
+            setTimeout(function () {
+                // $("#progress").text("Arıza Bölgesi Tespit Ediliyor..");
+                // changeText("Arıza Bölgesi Tespit Ediliyor..");
+                document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">Arıza Bölgesi Tespit Ediliyor..</h4>');
+                if (ihbarNoktalari.length > 2) {
+                    var maxX = Math.max.apply(null, ihbar_points_x);
+                    var minX = Math.min.apply(null, ihbar_points_x);
+                    var maxY = Math.max.apply(null, ihbar_points_y);
+                    var minY = Math.min.apply(null, ihbar_points_y);
+
+                    var cornerPoints = [
+                        [maxY, maxX], // Sağ üst köşe
+                        [minY, maxX], // Sağ alt köşe
+                        [minY, minX], // Sol alt köşe
+                        [maxY, minX], // Sol üst köşe
+                    ];
+
+                    polyline = L.polyline.antPath(cornerPoints, {
+                        use: L.polygon,
+                        delay: 1000, // Animasyon başlama süresi
+                        dashArray: [10, 20], // Kesikli çizgi özelliği
+                        weight: 3, // Çizgi kalınlığı
+                        color: 'black' // Çizgi rengi
+                    }).addTo(map);
+                }
+            }, animasyonSuresi); // Poligonun arıza noktasından önce çizilmesi için öncelikli olacak şekilde sırayı ayarla
+
+            // Kırmızı markeri en son çiz
+            setTimeout(function () {
+                // $("#progress").text("Arıza Bölgesi Tespit Edildi..");
+                // changeText("Arıza Bölgesi Tespit Edildi..");
+                document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">Arıza Bölgesi Tespit Edildi..</h4>');
+
+                if (ariza_position) {
+                    var marker = L.circleMarker([ariza_position[1], ariza_position[0]], {
+                        radius: 14,
+                        color: 'red',
+                        fill: true,
+                        fillOpacity: 1.0
+                    }).addTo(map);
+
+                    // Marker'ı sürekli büyütme ve küçültme döngüsü
+                    var increasing = true;
+                    var interval = setInterval(function () {
+                        var currentRadius = marker.getRadius();
+                        var step = increasing ? 5 : -5;
+
+                        if (currentRadius === 14 && !increasing) {
+                            clearInterval(interval); // Küçültme tamamlandığında döngüyü durdur
+                        }
+
+                        marker.setRadius(currentRadius + step);
+                        increasing = !increasing; // Büyütme ve küçültme arasında geçiş yap
+                    }, 200); // Her 1 saniyede bir radius'u değiştir
+
+                    // Poligonu arıza noktası göründükten sonra kaldır
+                    setTimeout(function () {
+                        map.removeLayer(polyline);
+                    }, 1000); // Arıza noktası göründükten 2 saniye sonra poligonu kaldır
+                }
+            }, animasyonSuresi * 1.5); // Kırmızı markerin gösterilme süresi 2 saniye sonra başla
+            // ekipAtama fonksiyonunu 15 saniye sonra çağır
+        }
+
+
+        function ekipAtama() {
+            map.setView([41.19732911223483, 36.719378543270956], 16); // Zoom seviyesini bir arttırır
+            var nodeEkipler = {{ node_ekipler | tojson }};
+            var shortestPath = {{ shortest_path | tojson }};
+            var shortestPaths = {{ shortest_paths | tojson }};
+            var ariza_position2 = {{ ariza_position | tojson }};
+            var arizaRow = {{ariza_row | safe}};
+            var pos = {{ pos | tojson }};
+            var delay = 500; // 500ms saniye bekleme süresi
+
+            console.log("ariza row: ", arizaRow)
+            console.log("ariza row: ", arizaRow[0], arizaRow[1]);
+            // Draw circleMarkers first
+            // $("#progress").text("Uygun Ekiplerin Lokasyonları Tespit Ediliyor..");
+            // changeText("Uygun Ekiplerin Lokasyonları Tespit Ediliyor..");
+            document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">Uygun Ekiplerin Lokasyonları Tespit Ediliyor..</h4>');
+            for (let i = 0; i < shortestPaths.length; i++) {
+                let shortest_p = shortestPaths[i];
+                let loc = pos[shortest_p[0]] || null;
+                if (loc) {
+                    setTimeout(function (loc, index) {
+                        return function () {
+                            L.circleMarker([loc[1], loc[0]], { radius: 12, color: 'cyan', fill: true, fillColor: "cyan", fillOpacity: 0.99 }).addTo(map);
+                        };
+                    }(loc, i), i * delay);
+                }
+            }
+            
+
+            // Calculate the completion time of the first loop
+            let firstLoopCompletionTime = shortestPaths.length * delay + 1000; // 3 seconds delay after the completion of the first loop
+
+            // Draw polylines with a delay after 3 seconds
+            // $("#progress").text("İlgili Ekiplerin Arıza Noktasına Doğru Yolları Gösteriliyor..");
+            
+            
+            setTimeout(function () {
+                // changeText("İlgili Ekiplerin Arıza Noktasına Doğru Yolları Gösteriliyor..");
+                document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">İlgili Ekiplerin Arıza Noktasına Doğru Yolları Gösteriliyor..</h4>');
+                let index_ekip = -1;
+                let polylines = [];
+                for (let i = 0; i < shortestPaths.length; i++) {
+                    let shortest_p = shortestPaths[i];
+                    let color = "red";
+                    let weight = 10;
+
+                    if (shortest_p.toString() === shortestPath.toString()) {
+                        color = "cyan";
+                        weight = 15;
+                        index_ekip = i;
+                    }
+
+                    for (let j = 0; j < shortest_p.length - 1; j++) {
+                        let u = shortest_p[j];
+                        let v = shortest_p[j + 1];
+                        let point1 = [pos[u][1], pos[u][0]];
+                        let point2 = [pos[v][1], pos[v][0]];
+                        let points = [point1, point2];
+
+                        setTimeout(function (points, color, weight) {
+                            let polyline = L.polyline(points, { color: color, weight: weight }).addTo(map);
+                            polylines.push(polyline);
+
+                            if (color === 'cyan') {
+                                let antPolyline = L.polyline.antPath(points, { delay: 400, dashArray: [30, 30], color: color, pulseColor: 'green', weight: weight }).addTo(map);
+                                polylines.push(antPolyline);
+                                // Start changing text color for this ekip
+                                changeTextColor2(index_ekip);
+                            }
+                        },  i * delay, points, color, weight);
+                    }
+                }
+
+                // Clear red polylines after 1 second intervals
+                // $("#progress").text("En Yakın Uygun Ekip Arıza Noktasına Atanıyor..");
+                
+                setTimeout(function () {
+                    // changeText("En Yakın Uygun Ekip Arıza Noktasına Atanıyor..");
+                    document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">En Yakın Uygun Ekip Arıza Noktasına Atanıyor..</h4>');
+                    for (let i = 0; i < polylines.length; i++) {
+                        if (polylines[i].options.color === 'red') {
+                            setTimeout(function (line) {
+                                map.removeLayer(line);
+                            }, i * 50, polylines[i]);
+                        }
+                    }
+
+                    // Append a row to the table after all red polylines are removed
+                    setTimeout(function () {
+                        // $("#progress").text("İlgili Arıza İş Emri Listesine Ekleniyor");
+                        // changeText("İlgili Arıza İş Emri Listesine Ekleniyor");
+                        document.getElementById("harita_yazisi").insertAdjacentHTML('beforeend', '<h4 class="text-center text-gradient text-primary font-weight-bolder">İlgili Arıza İş Emri Listesine Ekleniyor..</h4>');
+                        // $("#isEmri tbody").prepend("<tr><td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>format_list_numbered</span>" + arizaRow[0]  + "</div><td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>warning_amber</span> " + arizaRow[1] + "</div></td></td><td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>location_on</span> " + ariza_position2[1].toFixed(6) + "</div></td><td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>location_on</span> " + ariza_position2[0].toFixed(6) + "</div></td><td class='text-center'><div class='symbol-name-container2'><span class='material-symbols-outlined'>engineering</span> " + arizaRow[4] + "</div></td></tr>");
+                        $("#isEmri tbody").prepend(
+                                                    "<tr>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>format_list_numbered</span>" + 
+                                                    arizaRow[0]  + 
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>warning_amber</span> " + 
+                                                    arizaRow[1] + 
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>location_on</span> " + 
+                                                    ariza_position2[1].toFixed(6) + 
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>location_on</span> " + 
+                                                    ariza_position2[0].toFixed(6) + 
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>engineering</span> " + 
+                                                    arizaRow[4] + 
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>settings_accessibility</span> " + 
+                                                    arizaRow[6] + 
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>calendar_month</span> " + 
+                                                    arizaRow[7] +  "<br>" + "(Tahmini)" +
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>calendar_month</span> " + 
+                                                    arizaRow[8] +  "<br>" + "(Tahmini)" +
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "</td>" + 
+                                                    "<td class='text-center'>" + 
+                                                    "<div class='symbol-name-container2'>" + 
+                                                    "<span class='material-symbols-outlined'>calendar_month</span> " + 
+                                                    arizaRow[9] + "<br>" + "(Tahmini)" +
+                                                    "</div>" + 
+                                                    "</td>" + 
+                                                    "</tr>"
+                                                    );
+
+                        changeTextColors3();
+                    }, polylines.length * 100);
+                }, firstLoopCompletionTime + 2000);
+            }, firstLoopCompletionTime);
+        }
+
+        function changeTextColor2(index) {
+            console.log(index);
+            var colors = ['#FFFFFF', 'rgba(1, 44, 44, 0.9)']; // Değişen renkler: siyah ve yeşil
+            var currentIndex = 0;
+
+            setInterval(function() {
+                $("#ekipRow" + index + " td").css("color", colors[currentIndex]); // Ilgili ekip tablosundaki td hücrelerinin metin rengini güncelle
+                currentIndex = (currentIndex + 1) % colors.length; // Renk dizisindeki bir sonraki rengi seç
+            }, 1000); // 1 saniyede bir renk değiştir
+        }
+        
+        function changeTextColors3() {
+            var colors = ['rgba(0, 0, 0, 0.8)', 'white']; // Değişen renkler: siyah ve beyaz
+            var currentIndex = 0;
+
+            setInterval(function() {
+                $("#isEmri tbody tr:first-child").css("color", colors[currentIndex]); // İlgili tablonun ilk satırındaki ilk td hücresinin metin rengini güncelle
+                currentIndex = (currentIndex + 1) % colors.length; // Renk dizisindeki bir sonraki rengi seç
+            }, 1000); // 1 saniyede bir renk değiştir
+        }
+
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>

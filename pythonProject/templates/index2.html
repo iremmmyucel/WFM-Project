@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Folium Haritası</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <div id="map-container" style="width: 70%; margin: auto; display: flex; justify-content: center;">
+        {{ map_html|safe }}
+    </div>
+    <br>
+
+    <div id="button-container" style="justify-content: center; align-items: center; display: flex;">
+        <button id="antPathButton">Ekip Ata</button>
+    </div>
+
+    <script>
+        document.getElementById("antPathButton").addEventListener("click", function(event) {
+            event.preventDefault(); // Sayfanın yenilenmesini önleme
+
+            // AJAX kullanarak POST isteği gönderme
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/", true);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Harita alanını güncelleme
+                    var mapContainer = document.getElementById("map-container");
+                    mapContainer.innerHTML = JSON.parse(xhr.responseText)['map_html'];
+                }
+            };
+            xhr.send();
+        });
+    </script>
+    
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>document</title>
+    <style>
+        body{
+            padding: 70px;
+        }
+
+    </style>
+</head>
+<body>
+
+  
+
+    <div class="card-group">
+        <div class="card mb-3">
+            <img src="image/image2.webp" class="img-fluid" alt="">
+                <div class="card-body">
+                    <h5 class="card-text">Card Title</h5>
+                    <div id="arizaTableContent" class="table-content">
+                        <div class="row mx-auto py-5" style="max-width: 100%; max-height: 100%;">
+                            <div class="mx-auto" style="max-width: 800px;"> 
+                                <h4 class="text-center fw-bold mt-4" style="color: rgba(0, 0, 0, .6);" id="isEmrih4">Arızalar</h4>
+                                <div style="overflow-y: auto; max-height: 600px; overflow-x: auto; border-radius: 25px; overflow-y: auto;">
+                                    <table class="table table-striped shadow2 rounded" id="arizaTable"  style="border-radius: 20px; white-space: nowrap;">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Index</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Activity ID (M)</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Type (M)</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Latitude(M)</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Longitude(M)</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Etkilenen Kullanıcı Sayısı</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Cezaya Kalan Süre</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">SLA Kalan Süre</th>
+                                                <th class="text-uppercase text-xxs text-center font-weight-bolder opacity-7 ps-2">Puan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for index, row in df1.iterrows() %}
+                                                <tr>
+                                                    <td  class="text-center">{{ index + 1}}</td>
+                                                    <td  class="text-center">{{ row['Activity ID (M)'] }}</td>
+                                                    <td  class="text-center">{{ row['Type (M)'] }}</td>
+                                                    <td  class="text-center">{{ '%.6f' % row['Latitude(M)'] }}</td>
+                                                    <td  class="text-center">{{ '%.6f' % row['Longitude(M)'] }}</td>
+                                                    <td  class="text-center">{{ row['Number Of Users'] }}</td>
+                                                    <td  class="text-center">{{ row['Time Remaining'] }}</td>
+                                                    <td  class="text-center">{{ row['Delta Time'] }}</td>
+                                                    <td  class="text-center">{{ row['Score'] }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago.</small>
+                </div>
+        </div>
+        <div class="card mb-3">
+            <img src="image/image2.webp" class="img-fluid" alt="">
+                <div class="card-body">
+                    <h5 class="card-text">Card Title</h5>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                    
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago.</small>
+                </div>
+        </div>
+        <div class="card mb-3">
+            <img src="image/image2.webp" class="img-fluid" alt="">
+                <div class="card-body">
+                    <h5 class="card-text">Card Title</h5>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago.</small>
+                </div>
+        </div>
+
+        <div class="card mb-3">
+            <img src="image/image2.webp" class="img-fluid" alt="">
+                <div class="card-body">
+                    <h5 class="card-text">Card Title</h5>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum incidunt dolore, necessitatibus quia aliquam nostrum hic explicabo, aliquid enim, ea numquam! Maiores illum nam tenetur itaque similique nobis sequi non.</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Last updated 3 mins ago.</small>
+                </div>
+        </div>
+    </div>
+
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>    
+</body>
+</html> 
